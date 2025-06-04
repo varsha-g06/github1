@@ -1,0 +1,160 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f4f4d4;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #3d1c13;
+}
+body {
+  background: #f6eee3;
+  color: #3d1c13;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.marks-header {
+  background: #b03a2e;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 18px 16px 10px 12px;
+}
+.back-arrow {
+  font-size: 2rem;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.marks-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  flex: 1;
+}
+.marks-main {
+  max-width: 700px;
+  margin: 32px auto 0 auto;
+  padding: 0 12px 30px 12px;
+}
+.marks-profile {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, #fbe7d3 70%, #fff6ed 100%);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(150,90,60,0.07);
+  padding: 18px 18px 18px 19px;
+  margin-bottom: 20px;
+}
+.marks-photo {
+  width: 90px;
+  height: 90px;
+  border-radius: 9px;
+  object-fit: cover;
+  background: #c2b6a8;
+  margin-right: 19px;
+  border: 3px solid #b03a2e;
+}
+.marks-student-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.marks-student-name {
+  font-size: 1.13rem;
+  font-weight: bold;
+  color: #7d2717;
+  margin-bottom: 6px;
+}
+.marks-student-id {
+  font-size: 1.01rem;
+  color: #a05c34;
+  margin-bottom: 3px;
+  font-weight: 600;
+}
+.marks-student-course {
+  font-size: 1rem;
+  color: #5d4330;
+}
+.marks-table-section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(180,132,90,0.07);
+  padding: 24px 10px 20px 10px;
+}
+.section-title {
+  background: linear-gradient(90deg, #fae6d6 65%, #fff6ed 100%);
+  color: #b03a2e;
+  font-weight: 600;
+  padding: 10px 16px 10px 18px;
+  font-size: 1.03rem;
+  letter-spacing: 0.5px;
+  margin-bottom: 13px;
+  border-radius: 7px;
+}
+.marks-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff8ef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.marks-table th, .marks-table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1.5px solid #f2d9c3;
+}
+.marks-table th {
+  background: #fae6d6;
+  color: #b03a2e;
+  font-size: 1em;
+  font-weight: bold;
+}
+.marks-table tr:last-child td {
+  border-bottom: none;
+}
+.marks-table td {
+  color: #4d2e18;
+  font-size: 1em;
+}
+.footer-bar {
+  background: #b03a2e;
+  color: #fff;
+  text-align: center;
+  font-size: 1.02rem;
+  font-weight: 500;
+  padding: 15px 0 13px 0;
+  border-radius: 18px 18px 0 0;
+  letter-spacing: 1px;
+  margin: 0;
+  position: fixed;
+  width: 100vw;
+  left: 0;
+  bottom: 0;
+}
+@media (max-width: 600px) {
+  .marks-main {
+    max-width: 99vw;
+    padding: 0 2vw 40px 2vw;
+  }
+  .marks-profile {
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 4vw;
+  }
+  .marks-photo {
+    margin-bottom: 13px;
+    margin-right: 0;
+  }
+  .marks-table th, .marks-table td {
+    padding: 10px 4px;
+    font-size: 0.97em;
+  }
+}
+.back-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+}

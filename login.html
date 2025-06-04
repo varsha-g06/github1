@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Department Login | St. Xavier’s College</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body class="login-bg">
+  <!-- Back Arrow Button -->
+  <button class="back-btn" onclick="window.location.href='index.html'" aria-label="Go Back">&#8592;</button>
+
+  <div class="login-center-container">
+    <form id="loginForm" autocomplete="off" class="login-card">
+      <img src="assets/download.jpeg" alt="College Logo" class="login-logo">
+      <h1>Login</h1>
+      <div class="form-group">
+        <label for="login-username">Username</label>
+        <input type="text" id="login-username" required>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" required>
+      </div>
+      <div class="form-group">
+        <label for="login-role">Role</label>
+        <select id="login-role" required>
+         <option value="">Select Role</option>
+          <option value="student">Student</option>
+          <option value="faculty">Faculty</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-primary">Login</button>
+      <p class="auth-links"></p>
+      <p id="login-error" class="error-msg"></p>
+    </form>
+  </div>
+  <script src="login.js"></script>
+</body>
+</html>

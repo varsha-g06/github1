@@ -1,0 +1,17 @@
+[
+  {
+    "username": "student1",
+    "password": "student123",
+    "role": "student"
+  },
+  {
+    "username": "faculty1",
+    "password": "faculty123",
+    "role": "faculty"
+  },
+  {
+    "username": "admin1",
+    "password": "admin123",
+    "role": "admin"
+  }
+]

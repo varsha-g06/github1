@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Notes | Faculty</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="fac-notes.css">
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
+      <span class="header-title">Upload Notes</span>
+      <div class="header-right">
+        <button class="hamburger" aria-label="Open menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </header>
+    <main>
+      <section class="notes-section">
+        <div class="section-title">UPLOAD NOTES / RESOURCES</div>
+        <form class="notes-form" enctype="multipart/form-data" onsubmit="return submitNotes(event)">
+          <div class="form-row">
+            <label for="class-select">Class</label>
+            <select id="class-select" required>
+              <option value="">-- Select Class --</option>
+              <option value="ii-bsc-cs">II-B.Sc COMPUTER SCIENCE</option>
+              <option value="i-bca">I-B.Sc COMPUTER SCIENCE</option>
+              <option value="iii-bsc-cs">III-B.Sc COMPUTER SCIENCE</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="subject-select">Subject</label>
+            <select id="subject-select" required>
+              <option value="">-- Select Subject --</option>
+              <option value="dbms">Database Management Systems</option>
+              <option value="python-lab">Python Programming Lab</option>
+              <option value="ds">Data Structures</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="notes-title">Title</label>
+            <input type="text" id="notes-title" placeholder="Title of Notes/Resource" required>
+          </div>
+          <div class="form-row">
+            <label for="notes-file">Upload File (PDF/DOC/PPT/IMG)</label>
+            <input type="file" id="notes-file" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png" required>
+          </div>
+          <button type="submit" class="submit-btn">Upload</button>
+        </form>
+      </section>
+      <section class="notes-section">
+        <div class="section-title">UPLOADED NOTES</div>
+        <div class="notes-list">
+          
+          <div class="note-row">
+            <span class="note-title">DBMS - Relational Model</span>
+            <a href="assets/RDBMS_Unit_I.docx" class="download-link">Download</a>
+          </div>
+          <div class="note-row">
+            <span class="note-title">Python Lab - File Handling</span>
+            <a href="assets/rdbmspracticallist.docx" class="download-link">Download</a>
+          </div>
+          <!-- More uploaded notes -->
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div class="footer-bar">
+        2025 © <strong>ST. XAVIER'S COLLEGE (AUTONOMOUS)</strong>
+      </div>
+    </footer>
+  </div>
+  <script>
+    function submitNotes(event) {
+      event.preventDefault();
+      alert("Notes uploaded successfully!");
+      // In production, submit the form data with AJAX or a form action.
+      return false;
+    }
+  </script>
+</body>
+</html>

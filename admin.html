@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🧠 Computer Science Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-container">
+    <aside class="sidebar">
+      <div class="sidebar-title">🧠 CS Admin Panel</div>
+      <ul>
+        <li><a href="#" onclick="showSection('dashboard')">📊 Dashboard</a></li>
+        <li><a href="#" onclick="showSection('students')">👨‍🎓 Students</a></li>
+        <li><a href="#" onclick="showSection('faculty')">👩‍🏫 Faculty</a></li>
+        <li><a href="#" onclick="showSection('courses')">📘 Assign Courses</a></li>
+        <li><a href="#" onclick="showSection('reports')">📑 Reports</a></li>
+        
+        <li><a href="login.html" onclick="logout()">🚪 Logout</a></li>
+      </ul>
+    </aside>
+    <main class="main-content">
+      <header class="admin-header">
+        <span>Computer Science Admin Panel</span>
+        <span class="admin-user">
+  👤 Admin 
+  <a href="login.html" class="logout-btn" title="Logout">⎋</a>
+</span>
+
+      </header>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard" class="section active">
+        <div class="dashboard-cards">
+          <div class="card">
+            <div class="card-title">Total Students</div>
+            <div id="studentCount" class="card-value">0</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Total Faculty</div>
+            <div id="facultyCount" class="card-value">0</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Courses Offered</div>
+            <div id="courseCount" class="card-value">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Students Section -->
+      <section id="students" class="section">
+        <h2>👨‍🎓 Students</h2>
+        <form id="studentForm" onsubmit="addStudent(event)">
+          <input type="text" id="studentRoll" placeholder="Roll No" required>
+          <input type="text" id="studentName" placeholder="Name" required>
+          <input type="email" id="studentEmail" placeholder="Email" required>
+          <input type="text" id="studentClass" placeholder="Class" required>
+          <button type="submit">Add Student</button>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>Roll No</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Class</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentTable">
+            <!-- Students go here -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Faculty Section -->
+      <section id="faculty" class="section">
+        <h2>👩‍🏫 Faculty</h2>
+        <form id="facultyForm" onsubmit="addFaculty(event)">
+          <input type="text" id="facultyId" placeholder="ID" required>
+          <input type="text" id="facultyName" placeholder="Name" required>
+          <input type="email" id="facultyEmail" placeholder="Email" required>
+          <button type="submit">Add Faculty</button>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="facultyTable">
+            <!-- Faculty go here -->
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Assign Courses Section -->
+      <section id="courses" class="section">
+        <h2>📘 Assign Courses to Faculty</h2>
+        <form id="assignForm" onsubmit="assignCourse(event)">
+          <select id="facultySelect" required></select>
+          <select id="courseSelect" required>
+            <option value="">Select Course</option>
+            <option value="Data Structures">Data Structures</option>
+            <option value="DBMS">DBMS</option>
+            <option value="Software Engineering">Software Engineering</option>
+            <option value="Data Science">Data Science</option>
+            <option value="Lab-RDBMS">Lab-RDBMS</option>
+            <!-- Add more as needed -->
+          </select>
+          <button type="submit">Assign</button>
+        </form>
+        <ul id="assignmentList"></ul>
+      </section>
+
+      <!-- Reports Section -->
+      <section id="reports" class="section">
+        <h2>📑 Generate Reports</h2>
+        <button onclick="generateAttendanceReport()">Generate Attendance Report</button>
+        <button onclick="generateMarksReport()">Generate Marks Report</button>
+        <div id="reportOutput"></div>
+      </section>
+
+      
+    </main>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>

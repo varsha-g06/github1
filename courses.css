@@ -1,0 +1,110 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f4f4d4;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #3d1c13;
+}
+body {
+  background: #f6eee3;
+  color: #3d1c13;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+.courses-header {
+  background: #b03a2e;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 18px 16px 10px 12px;
+}
+.back-arrow {
+  font-size: 2rem;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.courses-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  flex: 1;
+}
+.courses-main {
+  max-width: 700px;
+  margin: 32px auto 0 auto;
+  padding: 0 12px 30px 12px;
+}
+.courses-section {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(180,132,90,0.07);
+  padding: 24px 10px 20px 10px;
+}
+.courses-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff8ef;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 0;
+}
+.courses-table th, .courses-table td {
+  padding: 14px 12px;
+  text-align: left;
+  border-bottom: 1.5px solid #f2d9c3;
+}
+.courses-table th {
+  background: #fae6d6;
+  color: #b03a2e;
+  font-size: 1.04em;
+  font-weight: bold;
+}
+.courses-table tr:last-child td {
+  border-bottom: none;
+}
+.courses-table td {
+  color: #4d2e18;
+  font-size: 1em;
+}
+.footer-bar {
+  background: #b03a2e;
+  color: #fff;
+  text-align: center;
+  font-size: 1.02rem;
+  font-weight: 500;
+  padding: 15px 0 13px 0;
+  border-radius: 18px 18px 0 0;
+  letter-spacing: 1px;
+  margin: 0;
+  position: fixed;
+  width: 100vw;
+  left: 0;
+  bottom: 0;
+}
+@media (max-width: 600px) {
+  .courses-main {
+    max-width: 99vw;
+    padding: 0 2vw 40px 2vw;
+  }
+  .courses-table th, .courses-table td {
+    padding: 10px 6px;
+    font-size: 0.97em;
+  }
+}
+.faculty-img {
+  width: 48px;
+  height: 58px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+}
+.back-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+}

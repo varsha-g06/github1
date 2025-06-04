@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mark Attendance | Faculty</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="fac-attend.css">
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
+      <span class="header-title">Mark Attendance</span>
+      <div class="header-right">
+        <button class="hamburger" aria-label="Open menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="attendance-section">
+        <div class="section-title">SELECT CLASS & SUBJECT</div>
+        <form class="attendance-form">
+          <div class="form-row">
+            <label for="class-select">Class</label>
+            <select id="class-select" required>
+              <option value="">-- Select Class --</option>
+              <option value="ii-bsc-cs">II-B.Sc COMPUTER SCIENCE</option>
+              <option value="i-bca">I-B.Sc COMPUTER SCIENCE</option>
+              <option value="iii-bsc-cs">III-B.Sc COMPUTER SCIENCE</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="subject-select">Subject</label>
+            <select id="subject-select" required>
+              <option value="">-- Select Subject --</option>
+              <option value="dbms">Database Management Systems</option>
+              <option value="python-lab">Python Programming Lab</option>
+              <option value="ds">Data Structures</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="date-select">Date</label>
+            <input type="date" id="date-select" required>
+          </div>
+          <button type="button" class="load-students-btn" onclick="loadStudents()">Load Students</button>
+        </form>
+      </section>
+
+      <section class="attendance-section" id="students-section" style="display:none;">
+        <div class="section-title">MARK ATTENDANCE</div>
+        <form class="attendance-students-form" onsubmit="return submitAttendance(event)">
+          <div class="students-list">
+
+            <div class="student-row">
+              <span class="student-name">Anitha M</span>
+              <div class="attendance-options">
+                <label><input type="checkbox" name="anitha_m" value="present"> Present</label>
+                <label><input type="checkbox" name="anitha_m" value="absent"> Absent</label>
+              </div>
+            </div>
+
+            <div class="student-row">
+              <span class="student-name">Bharathi K</span>
+              <div class="attendance-options">
+                <label><input type="checkbox" name="bharathi_k" value="present"> Present</label>
+                <label><input type="checkbox" name="bharathi_k" value="absent"> Absent</label>
+              </div>
+            </div>
+
+            <div class="student-row">
+              <span class="student-name">Divya S</span>
+              <div class="attendance-options">
+                <label><input type="checkbox" name="divya_s" value="present"> Present</label>
+                <label><input type="checkbox" name="divya_s" value="absent"> Absent</label>
+              </div>
+            </div>
+
+            <!-- Add more students as needed -->
+
+          </div>
+          <button type="submit" class="submit-btn">Submit Attendance</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-bar">
+        2025 © <strong>ST. XAVIER'S COLLEGE (AUTONOMOUS)</strong>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function loadStudents() {
+      document.getElementById('students-section').style.display = 'block';
+      window.scrollTo({
+        top: document.getElementById('students-section').offsetTop,
+        behavior: 'smooth'
+      });
+    }
+
+    function submitAttendance(event) {
+      event.preventDefault();
+
+      // Optional: Basic check for no selection at all
+      const checkboxes = document.querySelectorAll('.attendance-options input');
+      let selected = false;
+      checkboxes.forEach(cb => {
+        if (cb.checked) selected = true;
+      });
+
+      if (!selected) {
+        alert("Please mark attendance for at least one student.");
+        return false;
+      }
+
+      alert("Attendance has been submitted successfully!");
+      return false;
+    }
+  </script>
+</body>
+</html>

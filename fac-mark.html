@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enter Marks | Faculty</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="fac-mark.css">
+</head>
+<body>
+  <div class="container">
+    <header class="dashboard-header">
+      <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
+      <span class="header-title">Enter Marks</span>
+      <div class="header-right">
+        <button class="hamburger" aria-label="Open menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </header>
+    <main>
+      <section class="marks-section">
+        <div class="section-title">SELECT CLASS & SUBJECT</div>
+        <form class="marks-form" onsubmit="showMarksEntry(event)">
+          <div class="form-row">
+            <label for="class-select">Class</label>
+            <select id="class-select" required>
+              <option value="">-- Select Class --</option>
+              <option value="ii-bsc-cs">II-B.Sc COMPUTER SCIENCE</option>
+              <option value="i-bca">I-B.Sc COMPUTER SCIENCE</option>
+              <option value="iii-bsc-cs">III-B.Sc COMPUTER SCIENCE</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="subject-select">Subject</label>
+            <select id="subject-select" required>
+              <option value="">-- Select Subject --</option>
+              <option value="dbms">Database Management Systems</option>
+              <option value="python-lab">Python Programming Lab</option>
+              <option value="ds">Data Structures</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="assessment-type">Assessment Type</label>
+            <select id="assessment-type" required>
+              <option value="">-- Select Assessment --</option>
+              <option value="internal1">Internal 1</option>
+              <option value="internal2">Internal 2</option>
+              <option value="semester">Semester Exam</option>
+            </select>
+          </div>
+          <button type="submit" class="load-students-btn">Load Students</button>
+        </form>
+      </section>
+      <section class="marks-section" id="marks-entry-section" style="display:none;">
+        <div class="section-title">ENTER MARKS</div>
+        <form class="marks-entry-form" onsubmit="return submitMarks(event)">
+          <div class="students-list">
+            <div class="student-row">
+              <span class="student-name">Anitha M</span>
+              <input type="number" min="0" max="100" placeholder="Marks" required>
+            </div>
+            <div class="student-row">
+              <span class="student-name">Bharath K</span>
+              <input type="number" min="0" max="100" placeholder="Marks" required>
+            </div>
+            <div class="student-row">
+              <span class="student-name">Divya S</span>
+              <input type="number" min="0" max="100" placeholder="Marks" required>
+            </div>
+            <!-- More students can be added here -->
+          </div>
+          <button type="submit" class="submit-btn">Submit Marks</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <div class="footer-bar">
+        2025 © <strong>ST. XAVIER'S COLLEGE (AUTONOMOUS)</strong>
+      </div>
+    </footer>
+  </div>
+  <script>
+    function showMarksEntry(e) {
+      e.preventDefault();
+      document.getElementById('marks-entry-section').style.display = 'block';
+      window.scrollTo({
+        top: document.getElementById('marks-entry-section').offsetTop,
+        behavior: 'smooth'
+      });
+    }
+    function submitMarks(event) {
+      event.preventDefault();
+
+      // Gather student names and marks
+      const studentRows = document.querySelectorAll('.student-row');
+      let summary = "Marks entered:\n";
+      let allValid = true;
+
+      studentRows.forEach(function(row) {
+        const name = row.querySelector('.student-name').textContent;
+        const input = row.querySelector('input[type="number"]');
+        const value = input.value.trim();
+
+        if(value === "" || isNaN(value) || Number(value) < 0 || Number(value) > 100) {
+          allValid = false;
+        }
+        summary += `${name}: ${value ? value : "Not entered"}\n`;
+      });
+
+      if(!allValid) {
+        alert("Please enter valid marks (0-100) for all students.\n\n" + summary);
+        return false;
+      }
+
+      alert("Marks have been submitted successfully!\n\n" + summary);
+      // In production, you would send this data to the server here
+      return false;
+    }
+  </script>
+</body>
+</html>
