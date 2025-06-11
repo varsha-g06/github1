@@ -1,0 +1,104 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum RoleName {
+  student
+  faculty
+  admin
+}
+
+model Department {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  courses   Course[]
+  faculty   Faculty[]
+
+  @@map("departments")
+}
+
+model Role {
+  id        String   @id @default(uuid())
+  name      RoleName
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+
+  @@map("roles")
+}
+
+model Course {
+  id            String     @id @default(uuid())
+  course_name   String
+  course_code   String     @unique
+  year          Int
+  department_id String
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  department    Department @relation(fields: [department_id], references: [id])
+
+  @@map("courses")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role_id   String
+  role      Role     @relation(fields: [role_id], references: [id])
+  faculty   Faculty?
+  student   Student?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Faculty {
+  id               String      @id @default(uuid())
+  user_id          String      @unique
+  department_id    String? // Optional foreign key
+  faculty_code     String?
+  name             String
+  email            String
+  gender           String?
+  dob              DateTime?
+  phone            String?
+  qualification    String?
+  experience_years Int?
+  photo_url        String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  user             User        @relation(fields: [user_id], references: [id])
+  department       Department? @relation(fields: [department_id], references: [id]) // Make relation optional
+
+  @@map("faculty")
+}
+
+model Student {
+  id              String   @id @default(uuid())
+  user_id         String   @unique
+  name            String
+  register_number String   @unique
+  course          String
+  year            Int
+  email           String
+  phone           String
+  gender          String
+  dob             DateTime
+  photo_url       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [user_id], references: [id])
+
+  @@map("student")
+}
