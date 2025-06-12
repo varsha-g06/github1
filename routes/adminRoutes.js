@@ -5,6 +5,7 @@ const {
   addCourse,
   getCourseById,
   updateCourse,
+  getAllCourses, 
   deleteCourse,
   deleteAdmin,
   updateAdmin,
@@ -41,6 +42,7 @@ router.post('/courses', addCourse);
 
 // Get course by ID
 router.get('/courses/:id', getCourseById);
+router.get('/courses', getAllCourses);
 
 // Update course by ID
 router.put('/courses/:id', updateCourse);

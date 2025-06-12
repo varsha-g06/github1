@@ -16,10 +16,12 @@ enum RoleName {
 model Department {
   id        String    @id @default(uuid())
   name      String    @unique
+  year          String? 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   courses   Course[]
   faculty   Faculty[]
+  studentMarks   StudentMarks[]
 
   @@map("departments")
 }
@@ -44,7 +46,10 @@ model Course {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   department    Department @relation(fields: [department_id], references: [id])
-
+  studentCourses  StudentCourse[]
+  announcements  Announcement[]
+  studentMarks    StudentMarks[]
+  
   @@map("courses")
 }
 
@@ -80,7 +85,11 @@ model Faculty {
   updatedAt        DateTime    @updatedAt
   user             User        @relation(fields: [user_id], references: [id])
   department       Department? @relation(fields: [department_id], references: [id]) // Make relation optional
-
+  
+  announcements    Announcement[]
+   education        FacultyEducation[]
+  experiences      FacultyExperience[]
+  academicDetails  FacultyAcademicDetails[]
   @@map("faculty")
 }
 
@@ -89,7 +98,7 @@ model Student {
   user_id         String   @unique
   name            String
   register_number String   @unique
-  course          String
+  course          String?
   year            Int
   email           String
   phone           String
@@ -99,6 +108,117 @@ model Student {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   user            User     @relation(fields: [user_id], references: [id])
-
+ studentCourses  StudentCourse[]
+ studentMarks    StudentMarks[]
   @@map("student")
+
+}
+
+model StudentCourse {
+  id         String  @id @default(uuid())
+  student_id String
+  course_id  String
+
+  student    Student  @relation(fields: [student_id], references: [id])
+  course     Course   @relation(fields: [course_id], references: [id])
+    announcements StudentCourseAnnouncement[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([student_id, course_id])
+  @@map("student_courses")
+}
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  faculty_id  String
+  course_id   String  
+
+  faculty     Faculty @relation(fields: [faculty_id], references: [id])
+  course      Course  @relation(fields: [course_id], references: [id])
+    studentCourses StudentCourseAnnouncement[] 
+   @@map("announcements")
+}
+model StudentCourseAnnouncement {
+  id                 String        @id @default(uuid())
+  student_course_id  String
+  announcement_id    String
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @default(now()) @updatedAt  // ✅ FIXED
+
+  studentCourse      StudentCourse @relation(fields: [student_course_id], references: [id])
+  announcement       Announcement  @relation(fields: [announcement_id], references: [id])
+
+  @@unique([student_course_id, announcement_id])
+  @@map("student_course_announcements")
+}
+
+ model FacultyEducation {
+  id        String  @id @default(uuid())
+  facultyId String
+  faculty   Faculty @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+
+  degree          String
+  specialization  String
+  institutionName String
+  startYear       Int
+  endYear         Int
+  grade           String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("faculty_education")
+}
+
+model FacultyExperience {
+  id        String  @id @default(uuid())
+  facultyId String
+  faculty   Faculty @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+
+  institutionName String
+  designation     String
+  startDate       DateTime
+  endDate         DateTime?
+  isCurrent       Boolean
+  onboardDate     DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("faculty_experience")
+}
+
+model FacultyAcademicDetails {
+  id        String  @id @default(uuid())
+  facultyId String
+  faculty   Faculty @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+
+  subjectHandled String
+  paperPublished String
+  certifications String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("faculty_academic_details")
+}
+
+model StudentMarks {
+  id            String     @id @default(uuid())
+  student       Student    @relation(fields: [student_id], references: [id])
+  student_id    String
+  department_id String
+  course_id     String
+  course        Course     @relation(fields: [course_id], references: [id])
+  departments   Department @relation(fields: [department_id], references: [id])
+  total_marks   Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([student_id, course_id])
 }

@@ -161,7 +161,7 @@ exports.deleteAdmin = async (req, res) => {
 
 // Create Department
 exports.addDepartment = async (req, res) => {
-  const { name } = req.body;
+  const { name ,year} = req.body;
 
   if (!name) {
     return res.status(400).json({ error: 'Department name is required' });
@@ -179,7 +179,7 @@ exports.addDepartment = async (req, res) => {
 
     // Create new department
     const newDepartment = await prisma.Department.create({
-      data: { name },
+      data: { name,year, },
     });
 
     res.status(201).json(newDepartment);
@@ -204,7 +204,7 @@ exports.getAllDepartments = async (req, res) => {
 exports.updateDepartment = async (req, res) => {
   const { id } = req.params;
   console.log(id,"dfherugn");
-  const { name } = req.body;
+  const { name,year, } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: 'New department name is required' });
@@ -213,7 +213,7 @@ exports.updateDepartment = async (req, res) => {
   try {
     const updatedDepartment = await prisma.Department.update({
       where: { id },
-      data: { name }, // Prisma auto-updates updatedAt
+      data: { name,year, }, // Prisma auto-updates updatedAt
     });
 
     res.json(updatedDepartment);
@@ -240,7 +240,7 @@ exports.deleteDepartment = async (req, res) => {
 };
 
 exports.addCourse = async (req, res) => {
-  const { course_name, course_code, year, department_id } = req.body;
+  const { course_name, course_code, year, department_id, } = req.body;
 
   try {
     // Check if department exists
@@ -251,6 +251,7 @@ exports.addCourse = async (req, res) => {
     if (!department) {
       return res.status(404).json({ error: 'Department not found' });
     }
+   
 
     // Create course
     const newCourse = await prisma.Course.create({
@@ -275,7 +276,9 @@ exports.getCourseById = async (req, res) => {
   try {
     const course = await prisma.Course.findUnique({
       where: { id },
-      include: { department: true }, // Optional
+      include: { department: true,
+       },
+        // Optional
     });
 
     if (!course) {
@@ -292,16 +295,17 @@ exports.getCourseById = async (req, res) => {
 // Update course by ID
 exports.updateCourse = async (req, res) => {
   const { id } = req.params;
-  const { course_name, course_code, year, department_id } = req.body;
+  const { course_name, course_code, year, department_id, } = req.body;
 
   try {
+   
     const updatedCourse = await prisma.Course.update({
       where: { id },
       data: {
         course_name,
         course_code,
         year,
-        department_id,
+        department_id, 
       },
     });
 
@@ -311,6 +315,21 @@ exports.updateCourse = async (req, res) => {
     res.status(500).json({ error: 'Failed to update course' });
   }
 };
+// Get all courses with faculty and department
+exports.getAllCourses = async (req, res) => {
+  try {
+    const courses = await prisma.course.findMany({
+      include: {
+        department: true,
+      },
+    });
+    res.status(200).json(courses);
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+    res.status(500).json({ error: 'Failed to fetch courses' });
+  }
+};
+
 
 // Delete course by ID
 exports.deleteCourse = async (req, res) => {
