@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>My Attendance | Student Portal</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="attendance.css">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="attendance.css" />
 </head>
 <body>
   <header class="attendance-header" style="text-align: center;">
-   <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
+    <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
     <span class="attendance-title">My Attendance</span>
   </header>
+
   <main class="attendance-main">
     <section class="attendance-profile">
-      <img src="assets/hannah.jpg" alt="Student Photo" class="attendance-photo"/>
+      <img src="" alt="Student Photo" class="attendance-photo" id="student-photo" />
       <div class="attendance-student-info">
-        <div class="attendance-student-name">HANNAH JERO PAULINE J</div>
-        <div class="attendance-student-id">23UCS121</div>
-        <div class="attendance-student-course">II-Year-B.Sc COMPUTER SCIENCE</div>
+        <div class="attendance-student-name" id="student-name">Loading...</div>
+        <div class="attendance-student-id" id="student-id"></div>
+        <div class="attendance-student-course" id="student-course"></div>
       </div>
     </section>
+
     <section class="attendance-table-section">
       <div class="section-title">Attendance Summary</div>
       <table class="attendance-table">
@@ -34,55 +35,64 @@
             <th>Percentage</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>23UCS201</td>
-            <td>Data Structures</td>
-            <td>45</td>
-            <td>42</td>
-            <td>3</td>
-            <td>93.3%</td>
-          </tr>
-          <tr>
-            <td>23UCS202</td>
-            <td>Database Management Systems</td>
-            <td>48</td>
-            <td>46</td>
-            <td>2</td>
-            <td>95.8%</td>
-          </tr>
-          <tr>
-            <td>23UCS203</td>
-            <td>Software Engineering</td>
-            <td>44</td>
-            <td>40</td>
-            <td>4</td>
-            <td>90.9%</td>
-          </tr>
-          <tr>
-            <td>23UCS204</td>
-            <td>Data Science</td>
-            <td>43</td>
-            <td>41</td>
-            <td>2</td>
-            <td>95.3%</td>
-          </tr>
-          <tr>
-            <td>23UCS205</td>
-            <td>Lab-RDBMS</td>
-            <td>46</td>
-            <td>44</td>
-            <td>2</td>
-            <td>95.7%</td>
-          </tr>
+        <tbody id="attendance-tbody">
+          <tr><td colspan="6">Loading attendance data...</td></tr>
         </tbody>
       </table>
     </section>
   </main>
+
   <footer>
     <div class="footer-bar">
       2025 © <strong>ST. XAVIER'S COLLEGE (AUTONOMOUS)</strong>
     </div>
   </footer>
+
+  <!-- Axios CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const studentPhoto = document.getElementById('student-photo');
+      const studentName = document.getElementById('student-name');
+      const studentId = document.getElementById('student-id');
+      const studentCourse = document.getElementById('student-course');
+      const attendanceTbody = document.getElementById('attendance-tbody');
+
+      axios.get('attendance.json')
+        .then(response => {
+          const data = response.data;
+
+          // Update student info
+          studentPhoto.src = data.student.photo;
+          studentPhoto.alt = data.student.name;
+          studentName.textContent = data.student.name;
+          studentId.textContent = data.student.id;
+          studentCourse.textContent = data.student.course;
+
+          // Clear loading text
+          attendanceTbody.innerHTML = '';
+
+          // Add attendance rows
+          data.attendance.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${item.courseCode}</td>
+              <td>${item.courseTitle}</td>
+              <td>${item.classesHeld}</td>
+              <td>${item.attended}</td>
+              <td>${item.absent}</td>
+              <td>${item.percentage}</td>
+            `;
+            attendanceTbody.appendChild(tr);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading attendance data:', error);
+          attendanceTbody.innerHTML = '<tr><td colspan="6">Failed to load attendance data.</td></tr>';
+          studentName.textContent = 'Error loading student info';
+        });
+    });
+  </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-document.getElementById('loginForm').addEventListener('submit', function(e) {
+document.getElementById('loginForm').addEventListener('submit', function (e) {
   e.preventDefault();
 
   const username = document.getElementById('login-username').value.trim();
@@ -6,40 +6,31 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
   const role = document.getElementById('login-role').value;
   const errorMsg = document.getElementById('login-error');
 
-  fetch('users.json')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to load user data');
-      }
-      return response.json();
-    })
-    .then(users => {
-      const user = users.find(
-        u => u.username === username && u.password === password && u.role === role
-      );
-
-      if (user) {
+  axios.post('http://localhost:4000/api/login',
+    { username, password, role }, // ✅ Body only
+    { headers: { 'Content-Type': 'application/json' } } // ✅ Headers only
+  )
+    .then(res => {
+      const data = res.data;
+      if (data.token) { 
         errorMsg.style.color = "#75520b";
         errorMsg.textContent = "Login successful! Redirecting...";
+
+        localStorage.setItem('authToken', data.token);
+
         setTimeout(() => {
-          if (role === "student") {
-            window.location.href = "student.html";
-          } else if (role === "admin") {
-            window.location.href = "admin.html";
-          } else if (role === "faculty") {
-            window.location.href = "faculty.html";
-          } else {
-            window.location.href = "index.html";
-          }
-        }, 500);
+          if (role === "student") window.location.href = "student.html";
+          else if (role === "faculty") window.location.href = "faculty.html";
+          else if (role === "admin") window.location.href = "admin.html";
+        }, 1000);
       } else {
         errorMsg.style.color = "#a52a2a";
-        errorMsg.textContent = "Invalid credentials or role.";
+        errorMsg.textContent = data.error || "Login failed";
       }
     })
-    .catch(error => {
+    .catch(err => {
+      console.error(err);
       errorMsg.style.color = "#a52a2a";
-      errorMsg.textContent = "Error loading user data.";
-      console.error(error);
+      errorMsg.textContent = "Invalid credentials or role";
     });
 });

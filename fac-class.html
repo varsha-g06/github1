@@ -5,6 +5,7 @@
   <title>My Courses | Faculty</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="fac-class.css">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -19,6 +20,7 @@
         </button>
       </div>
     </header>
+
     <main>
       <div class="faculty-photo-container">
         <img src="assets/Dr. M. PREETHIi.jpg" alt="Faculty Photo" class="faculty-photo" />
@@ -26,45 +28,58 @@
       <section class="profile-section">
         <div class="section-title">CLASSES & SUBJECTS</div>
         <div class="courses-list">
-          <div class="course-card">
-            <div class="course-main">
-              <span class="class-label">II-B.Sc COMPUTER SCIENCE</span>
-              <span class="subject-label">Database Management Systems</span>
-            </div>
-            <div class="course-meta">
-              <span class="batch-label">Batch: 2023-2026</span>
-              <span class="semester-label">Semester: 4</span>
-            </div>
-          </div>
-          <div class="course-card">
-            <div class="course-main">
-              <span class="class-label">I-B.Sc COMPUTER SCIENCE</span>
-              <span class="subject-label">Python Programming Lab</span>
-            </div>
-            <div class="course-meta">
-              <span class="batch-label">Batch: 2024-2027</span>
-              <span class="semester-label">Semester: 2</span>
-            </div>
-          </div>
-          <div class="course-card">
-            <div class="course-main">
-              <span class="class-label">III-B.Sc COMPUTER SCIENCE</span>
-              <span class="subject-label">Data Structures</span>
-            </div>
-            <div class="course-meta">
-              <span class="batch-label">Batch: 2022-2025</span>
-              <span class="semester-label">Semester: 6</span>
-            </div>
-          </div>
-          <!-- Add more course cards  -->
+          <!-- Course cards will be dynamically inserted here -->
         </div>
       </section>
     </main>
+
     <footer>
       <div class="footer-bar">
         2025 © <strong>ST. XAVIER'S COLLEGE (AUTONOMOUS)</strong>
       </div>
     </footer>
   </div>
+
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const coursesList = document.querySelector('.courses-list');
+
+      try {
+        const response = await axios.get('fac-class.json');
+        const data = response.data;
+
+        // Optional: Set dynamic photo if needed
+        const facultyImg = document.querySelector('.faculty-photo');
+        if (data.name.includes("PREETHIi")) {
+          facultyImg.src = 'assets/Dr. M. PREETHIi.jpg';
+        }
+
+        // Clear and load course cards
+        coursesList.innerHTML = '';
+
+        data.courses.forEach(course => {
+          const card = document.createElement('div');
+          card.className = 'course-card';
+
+          card.innerHTML = `
+            <div class="course-main">
+              <span class="class-label">${course.class}</span>
+              <span class="subject-label">${course.subject}</span>
+            </div>
+            <div class="course-meta">
+              <span class="batch-label">Batch: ${course.batch}</span>
+              <span class="semester-label">Semester: ${course.semester}</span>
+            </div>
+          `;
+
+          coursesList.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Failed to load course data:', error);
+        coursesList.innerHTML = '<p style="color:red;">Failed to load course data.</p>';
+      }
+    });
+  </script>
 </body>
 </html>

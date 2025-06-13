@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,21 +5,22 @@
   <title>Profile | Student Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="stu-profile.css">
- 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
   <header class="profile-header" style="text-align: center;">
- <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
-    <span class="profile-title" >PROFILE</span>
-    
+    <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
+    <span class="profile-title">PROFILE</span>
   </header>
 
   <div class="profile-bg-banner">
     <img src="assets/ban.webp" alt="Profile Banner" class="profile-bg-img">
     <div class="profile-photo-container">
-      <img src="assets/hannah.jpg" alt="Student Photo" class="profile-photo"/>
+      <img src="assets/icon.png" alt="Student Photo" class="profile-photo" id="profilePhoto"/>
     </div>
   </div>
+ 
+
 
   <main class="profile-main">
     <section class="personal-info-section">
@@ -28,36 +28,35 @@
       <div class="info-list">
         <div class="info-row">
           <span class="info-label">Name</span>
-          <span class="info-value">HANNAH JERO PAULINE J</span>
+          <span class="info-value" id="name">Loading...</span>
         </div>
         <div class="info-row">
           <span class="info-label">Reg. No</span>
-          <span class="info-value">23UCS121</span>
+          <span class="info-value" id="regNo"></span>
         </div>
         <div class="info-row">
           <span class="info-label">Degree</span>
-          <span class="info-value">B.Sc COMPUTER SCIENCE</span>
+          <span class="info-value" id="degree"></span>
         </div>
         <div class="info-row">
           <span class="info-label">Year</span>
-          <span class="info-value">II-Year</span>
+          <span class="info-value" id="year"></span>
         </div>
         <div class="info-row">
           <span class="info-label">Email</span>
-          <span class="info-value"> hannah.jero@xaviers.edu</span>
+          <span class="info-value" id="email"></span>
         </div>
         <div class="info-row">
           <span class="info-label">Phone No</span>
-          <span class="info-value">+91 98765 43210</span>
+          <span class="info-value" id="phone"></span>
         </div>
-        
         <div class="info-row">
           <span class="info-label">Gender</span>
-          <span class="info-value">FEMALE</span>
+          <span class="info-value" id="gender"></span>
         </div>
         <div class="info-row">
           <span class="info-label">DOB</span>
-          <span class="info-value">12-Jan-2006</span>
+          <span class="info-value" id="dob"></span>
         </div>
       </div>
     </section>
@@ -68,5 +67,35 @@
       2025 © <strong>ST. XAVIER'S COLLEGE (AUTONOMOUS)</strong>
     </div>
   </footer>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+  async function loadProfile() {
+    try {
+      const response = await axios.get('http://localhost:4000/api/student');
+      const data = response.data[0]; 
+      if (!data) throw new Error('no faculty found');
+
+      document.getElementById('name').textContent = data.name;
+      document.getElementById('regNo').textContent = data.register_number;
+      document.getElementById('degree').textContent = data.course || 'N/A';
+      document.getElementById('year').textContent = data.year;
+      document.getElementById('email').textContent = data.email;
+      document.getElementById('phone').textContent = data.phone || 'N/A';
+      document.getElementById('gender').textContent = data.gender || 'N/A';
+      document.getElementById('dob').textContent = new Date(data.dob).toLocaleDateString('en-IN'); // format: DD/MM/YYYY
+
+      // ✅ Photo fallback
+      document.getElementById('profilePhoto').src = data.photo_url || 'assets/icon.png';
+
+    } catch (error) {
+      console.error('Failed to load profile:', error);
+      document.getElementById('name').textContent = 'Error loading data';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', loadProfile);
+</script>
+
 </body>
 </html>

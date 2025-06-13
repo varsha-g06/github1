@@ -5,22 +5,24 @@
   <title>My Marks | Student Portal</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="marks.css">
-  
+
 </head>
 <body>
   <header class="marks-header" style="text-align: center;">
-   <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
+    <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
     <span class="marks-title">My Marks</span>
   </header>
+
   <main class="marks-main">
     <section class="marks-profile">
       <img src="assets/hannah.jpg" alt="Student Photo" class="marks-photo"/>
       <div class="marks-student-info">
-        <div class="marks-student-name">HANNAH JERO PAULINE J</div>
-        <div class="marks-student-id">23UCS121</div>
-        <div class="marks-student-course">II-Year-B.Sc COMPUTER SCIENCE</div>
+        <div class="marks-student-name" id="studentName">Loading...</div>
+        <div class="marks-student-id" id="studentId">Loading...</div>
+        <div class="marks-student-course" id="studentCourse">Loading...</div>
       </div>
     </section>
+
     <section class="marks-table-section">
       <div class="section-title">Exam Results</div>
       <table class="marks-table">
@@ -28,61 +30,59 @@
           <tr>
             <th>Course Code</th>
             <th>Course Title</th>
-            <th>Internal</th>
-            <th>External</th>
+          
             <th>Total</th>
-            <th>Grade</th>
+          
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>23UCS201</td>
-            <td>Data Structures</td>
-            <td>23</td>
-            <td>68</td>
-            <td>91</td>
-            <td>A+</td>
-          </tr>
-          <tr>
-            <td>23UCS202</td>
-            <td>Database Management Systems</td>
-            <td>21</td>
-            <td>70</td>
-            <td>91</td>
-            <td>A+</td>
-          </tr>
-          <tr>
-            <td>23UCS203</td>
-            <td>Software Engineering</td>
-            <td>22</td>
-            <td>63</td>
-            <td>85</td>
-            <td>A</td>
-          </tr>
-          <tr>
-            <td>23UCS204</td>
-            <td>Data Science</td>
-            <td>20</td>
-            <td>65</td>
-            <td>85</td>
-            <td>A</td>
-          </tr>
-          <tr>
-            <td>23UCS205</td>
-            <td>Lab-RDBMS</td>
-            <td>24</td>
-            <td>69</td>
-            <td>93</td>
-            <td>O</td>
-          </tr>
+        <tbody id="marksTableBody">
+          <tr><td colspan="6">Loading marks...</td></tr>
         </tbody>
       </table>
     </section>
   </main>
+
   <footer>
     <div class="footer-bar">
       2025 © <strong>ST. XAVIER'S COLLEGE (AUTONOMOUS)</strong>
     </div>
   </footer>
-</body>
-</html>
+
+
+      <script>
+  async function loadMarks() {
+    try {
+      const response = await fetch('marks.json'); // local file
+      if (!response.ok) throw new Error('Failed to load marks');
+
+      const data = await response.json();
+      const { student, marks } = data;
+
+      // Set student info
+      document.getElementById('studentName').textContent = student.name;
+      document.getElementById('studentId').textContent = student.regNo;
+      document.getElementById('studentCourse').textContent = `${student.year}-Year-${student.degree}`;
+
+      // Populate marks
+      const tbody = document.getElementById('marksTableBody');
+      tbody.innerHTML = '';
+
+      marks.forEach(mark => {
+        const row = `
+          <tr>
+            <td>${mark.courseCode}</td>
+            <td>${mark.courseTitle}</td>
+           
+            <td>${mark.total}</td>
+           
+          </tr>`;
+        tbody.innerHTML += row;
+      });
+    } catch (error) {
+      console.error('Error loading marks:', error);
+      document.getElementById('marksTableBody').innerHTML = '<tr><td colspan="3">Failed to load marks.</td></tr>';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', loadMarks);
+</script>

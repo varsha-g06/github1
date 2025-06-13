@@ -9,16 +9,19 @@
 <body>
   <div class="container">
     <header class="dashboard-header">
-      <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
-      <span class="header-title">Mark Attendance</span>
-      <div class="header-right">
-        <button class="hamburger" aria-label="Open menu">
-          <span class="bar"></span>
-          <span class="bar"></span>
-          <span class="bar"></span>
-        </button>
-      </div>
-    </header>
+  <button class="back-btn" onclick="window.history.back()" aria-label="Go Back">&#8592;</button>
+  
+  <span class="header-title">Mark Attendance</span>
+  
+  <div class="header-right">
+    <button class="hamburger" aria-label="Open menu">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+  </div>
+</header>
+
 
     <main>
       <section class="attendance-section">
@@ -29,7 +32,7 @@
             <select id="class-select" required>
               <option value="">-- Select Class --</option>
               <option value="ii-bsc-cs">II-B.Sc COMPUTER SCIENCE</option>
-              <option value="i-bca">I-B.Sc COMPUTER SCIENCE</option>
+              <option value="i-bsc-cs">I-B.Sc COMPUTER SCIENCE</option>
               <option value="iii-bsc-cs">III-B.Sc COMPUTER SCIENCE</option>
             </select>
           </div>
@@ -52,36 +55,8 @@
 
       <section class="attendance-section" id="students-section" style="display:none;">
         <div class="section-title">MARK ATTENDANCE</div>
-        <form class="attendance-students-form" onsubmit="return submitAttendance(event)">
-          <div class="students-list">
-
-            <div class="student-row">
-              <span class="student-name">Anitha M</span>
-              <div class="attendance-options">
-                <label><input type="checkbox" name="anitha_m" value="present"> Present</label>
-                <label><input type="checkbox" name="anitha_m" value="absent"> Absent</label>
-              </div>
-            </div>
-
-            <div class="student-row">
-              <span class="student-name">Bharathi K</span>
-              <div class="attendance-options">
-                <label><input type="checkbox" name="bharathi_k" value="present"> Present</label>
-                <label><input type="checkbox" name="bharathi_k" value="absent"> Absent</label>
-              </div>
-            </div>
-
-            <div class="student-row">
-              <span class="student-name">Divya S</span>
-              <div class="attendance-options">
-                <label><input type="checkbox" name="divya_s" value="present"> Present</label>
-                <label><input type="checkbox" name="divya_s" value="absent"> Absent</label>
-              </div>
-            </div>
-
-            <!-- Add more students as needed -->
-
-          </div>
+        <form class="attendance-students-form" onsubmit="submitAttendance(event)">
+          <div class="students-list"></div>
           <button type="submit" class="submit-btn">Submit Attendance</button>
         </form>
       </section>
@@ -94,32 +69,67 @@
     </footer>
   </div>
 
+  <!-- Axios CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
   <script>
-    function loadStudents() {
-      document.getElementById('students-section').style.display = 'block';
-      window.scrollTo({
-        top: document.getElementById('students-section').offsetTop,
-        behavior: 'smooth'
-      });
+    async function loadStudents() {
+      const classValue = document.getElementById("class-select").value;
+      const studentsSection = document.getElementById("students-section");
+      const studentsList = document.querySelector(".students-list");
+
+      if (!classValue) {
+        alert("Please select a class.");
+        return;
+      }
+
+      try {
+        const response = await axios.get('fac-attend.json');
+        const data = response.data[classValue];
+
+        if (!data) {
+          studentsList.innerHTML = "<p>No students found for selected class.</p>";
+        } else {
+          studentsList.innerHTML = "";
+          data.forEach(student => {
+            const row = document.createElement('div');
+            row.classList.add('student-row');
+            row.innerHTML = `
+              <span class="student-name">${student.name}</span>
+              <div class="attendance-options">
+                <label><input type="radio" name="${student.id}" value="present"> Present</label>
+                <label><input type="radio" name="${student.id}" value="absent"> Absent</label>
+              </div>
+            `;
+            studentsList.appendChild(row);
+          });
+        }
+
+        studentsSection.style.display = 'block';
+        window.scrollTo({ top: studentsSection.offsetTop, behavior: 'smooth' });
+
+      } catch (err) {
+        console.error('Error loading students:', err);
+        studentsList.innerHTML = "<p style='color: red;'>Could not load students.json</p>";
+      }
     }
 
     function submitAttendance(event) {
       event.preventDefault();
+      const radios = document.querySelectorAll('.attendance-options input[type="radio"]:checked');
 
-      // Optional: Basic check for no selection at all
-      const checkboxes = document.querySelectorAll('.attendance-options input');
-      let selected = false;
-      checkboxes.forEach(cb => {
-        if (cb.checked) selected = true;
-      });
-
-      if (!selected) {
+      if (radios.length === 0) {
         alert("Please mark attendance for at least one student.");
-        return false;
+        return;
       }
 
-      alert("Attendance has been submitted successfully!");
-      return false;
+      const attendanceData = Array.from(radios).map(radio => ({
+        studentId: radio.name,
+        status: radio.value
+      }));
+
+      console.log("Attendance Submitted:", attendanceData);
+      alert("Attendance submitted successfully!");
     }
   </script>
 </body>

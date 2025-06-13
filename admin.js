@@ -1,185 +1,124 @@
-// -- Data 
-let students = [
-  {roll: "23UCS121", name: "J. Hannah Jero Pauline", email: "hannah.jero@xaviers.edu", class: "II CS"},
-  {roll: "23UCS502", name: "S. Priya", email: "priya@xaviers.edu", class: "II CS"}
-];
-let faculty = [
-  {id: "F01", name: "Dr. J.Rexy", email: "rexy@cscollege.edu"},
-  {id: "F02", name: "Dr. M.Preethi", email: "preethi@cscollege.edu"}
-];
-let assignments = []; // {facultyId, course}
-const courses = [
-  "Data Structures", "DBMS", "Software Engineering",
-  "Data Science", "Lab-RDBMS"
-];
 
-// -- Section Switcher
-function showSection(sectionId) {
-  document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-  document.getElementById(sectionId).classList.add('active');
-  updateDashboard();
-  if(sectionId === "courses") updateFacultyDropdown();
-}
+document.addEventListener('DOMContentLoaded', function () {
+  const token = localStorage.getItem('authToken');
+  const errorMsg = document.getElementById('login-error'); // Optional: for displaying errors
 
-// -- Dashboard Cards
-function updateDashboard() {
-  document.getElementById("studentCount").textContent = students.length;
-  document.getElementById("facultyCount").textContent = faculty.length;
-  document.getElementById("courseCount").textContent = courses.length;
-}
-
-// -- Students
-function addStudent(e) {
-  e.preventDefault();
-  const roll = document.getElementById('studentRoll').value.trim();
-  const name = document.getElementById('studentName').value.trim();
-  const email = document.getElementById('studentEmail').value.trim();
-  const cls = document.getElementById('studentClass').value.trim();
-  if(roll && name && email && cls) {
-    students.push({roll, name, email, class: cls});
-    e.target.reset();
-    renderStudents();
-    updateDashboard();
-  }
-}
-function renderStudents() {
-  const tb = document.getElementById('studentTable');
-  tb.innerHTML = "";
-  students.forEach((s, idx) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${s.roll}</td><td>${s.name}</td><td>${s.email}</td><td>${s.class}</td>
-      <td><button onclick="removeStudent(${idx})">Remove</button></td>`;
-    tb.appendChild(tr);
+  axios.get('http://localhost:4000/api/student/', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => { 
+ renderStudents(response.data);
+     
+  })
+  .catch(error => {
+    console.error('Error fetching student data:', error);
+    if (errorMsg) {
+      errorMsg.style.color = "#a52a2a";
+      errorMsg.textContent = "Failed to fetch student profile.";
+    }
   });
-}
-function removeStudent(idx) {
-  students.splice(idx, 1);
-  renderStudents();
-  updateDashboard();
-}
+});
 
-// -- Faculty
-function addFaculty(e) {
+
+
+document.getElementById('studentEditForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  const id = document.getElementById('facultyId').value.trim();
-  const name = document.getElementById('facultyName').value.trim();
-  const email = document.getElementById('facultyEmail').value.trim();
-  if(id && name && email) {
-    faculty.push({id, name, email});
-    e.target.reset();
-    renderFaculty();
-    updateDashboard();
-  }
-}
-function renderFaculty() {
-  const tb = document.getElementById('facultyTable');
-  tb.innerHTML = "";
-  faculty.forEach((f, idx) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${f.id}</td><td>${f.name}</td><td>${f.email}</td>
-      <td><button onclick="removeFaculty(${idx})">Remove</button></td>`;
-    tb.appendChild(tr);
-  });
-}
-function removeFaculty(idx) {
-  faculty.splice(idx, 1);
-  renderFaculty();
-  updateDashboard();
-}
 
-// -- Assign Courses
-function updateFacultyDropdown() {
-  const sel = document.getElementById('facultySelect');
-  sel.innerHTML = faculty.map(f => `<option value="${f.id}">${f.name} (${f.id})</option>`).join("");
-}
-function assignCourse(e) {
+// Get the last row (User ID is in the last <tr>)
+const userId = document.getElementById("editUserId").value 
+console.log('User ID:', userId);
+  const updatedData = {
+    register_number: document.getElementById('editStudentRoll').value,
+    name: document.getElementById('editStudentName').value,
+    email: document.getElementById('editStudentEmail').value,
+    course: document.getElementById('editStudentClass').value,
+    phone: document.getElementById('editStudentPhone').value,
+    gender: document.getElementById('editStudentGender').value,
+    dob: document.getElementById('editStudentDob').value,
+    year: parseInt(document.getElementById('editStudentYear').value),
+  };
+
+  const token = localStorage.getItem('authToken');
+  axios.put(`http://localhost:4000/api/student/${userId}`, updatedData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    console.log(response.data,"gjdfhfskjh")
+    if(response.data.status === 200){
+            alert("updated student successFully.");
+         closeStudentEdit();
+         console.log(response.data.data)
+    fetchStudents(); // re-fetch and render
+    }else{
+    alert("Failed to update student.");
+    }
+   
+  }).catch(err => {
+    console.error('Update failed', err);
+  });
+});
+
+
+document.getElementById('studentEditForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  const facultyId = document.getElementById('facultySelect').value;
-  const course = document.getElementById('courseSelect').value;
-  if(facultyId && course) {
-    assignments.push({facultyId, course});
-    renderAssignments();
-    e.target.reset();
-  }
-}
-function renderAssignments() {
-  const ul = document.getElementById('assignmentList');
-  ul.innerHTML = "";
-  assignments.forEach((a, idx) => {
-    const fac = faculty.find(f => f.id === a.facultyId);
-    const text = fac ? `${fac.name} (${fac.id}) - ${a.course}` : `${a.facultyId} - ${a.course}`;
-    const li = document.createElement('li');
-    li.textContent = text;
-    const btn = document.createElement('button');
-    btn.textContent = "Remove";
-    btn.onclick = () => { assignments.splice(idx, 1); renderAssignments(); };
-    btn.style.marginLeft = "14px";
-    li.appendChild(btn);
-    ul.appendChild(li);
+
+// Get the last row (User ID is in the last <tr>)
+const userId = document.getElementById("editUserId").value 
+console.log('User ID:', userId);
+
+  axios.delete(`http://localhost:4000/api/student/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    if(response.data.status === 200){
+        alert("Deleted student successFully.");
+        renderStudents();// re-fetch and render
+    }else{
+    alert("Failed to Delete student.");
+    }
+   
+  }).catch(err => {
+    console.error('Update failed', err);
   });
-}
-
-// -- Reports
-function generateAttendanceReport() {
-  const out = document.getElementById('reportOutput');
-  out.innerHTML = `
-    <h3>Attendance Report</h3>
-    <table border="1" cellpadding="8" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Roll Number</th>
-          <th>Name</th>
-          <th>Attendance (%)</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${students.map(s => `
-          <tr>
-            <td>${s.roll}</td>
-            <td>${s.name}</td>
-            <td>95%</td>
-          </tr>`).join("")}
-      </tbody>
-    </table>
-  `;
-}
-
-function generateMarksReport() {
-  const out = document.getElementById('reportOutput');
-  out.innerHTML = `
-    <h3>Marks Report</h3>
-    <table border="1" cellpadding="8" cellspacing="0">
-      <thead>
-        <tr>
-          <th>Roll Number</th>
-          <th>Name</th>
-          <th>Marks</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${students.map(s => `
-          <tr>
-            <td>${s.roll}</td>
-            <td>${s.name}</td>
-            <td>80</td>
-          </tr>`).join("")}
-      </tbody>
-    </table>
-  `;
-}
+});
 
 
-// -- Logout
-function logout() {
-  alert("Logging out...");
-  // Redirect or implement actual logout as needed
-}
+document.getElementById('studentForm').addEventListener('submit', function (e) {
+  e.preventDefault();
 
-// -- Initial Render on Load
-document.addEventListener("DOMContentLoaded", () => {
-  renderStudents();
-  renderFaculty();
-  renderAssignments();
-  updateDashboard();
-  updateFacultyDropdown();
+  const data = {
+    register_number: document.getElementById('studentRoll').value,
+    name: document.getElementById('studentName').value,
+    email: document.getElementById('studentEmail').value,
+    year: parseInt(document.getElementById('studentClass').value),
+    phone: document.getElementById("studentPhone").value,
+    dob: document.getElementById("studentDOB").value,
+    gender: document.getElementById("studentGender").value,
+  };
+
+  const errorMsg = document.getElementById('login-error');
+
+  axios.post('http://localhost:4000/api/student/', data, {
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(res => {
+    console.log("Student added:", res.data);
+  
+    alert("Student added successfully.");
+    // Optionally clear form
+    document.getElementById('studentForm').reset();
+    renderStudents(res.data.data); // Refresh table
+  })
+  .catch(err => {
+    console.error(err);
+    errorMsg.style.color = "#a52a2a";
+    errorMsg.textContent = "Failed to add student.";
+  });
 });

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>My Courses | Student Portal</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="courses.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="courses.css" />
 </head>
 <body>
   <header class="courses-header" style="text-align: center;">
@@ -23,36 +23,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>23UCS201</td>
-            <td>Data Structures</td>
-            <td>Dr. J.Rexy</td>
-            <td><img src="assets/Computer Science - Dr. Rexy JeYAKUMAR.jpg" alt="Dr. J.Rexy" class="faculty-img" /></td>
-          </tr>
-          <tr>
-            <td>23UCS202</td>
-            <td>Database Management Systems</td>
-            <td>Dr. J.Margaret Sangeetha</td>
-            <td><img src="assets/magie.jpg" alt="Dr. J.Margaret Sangeetha" class="faculty-img" /></td>
-          </tr>
-          <tr>
-            <td>23UCS203</td>
-            <td>Software Engineering</td>
-            <td>Dr. M.Preethi</td>
-            <td><img src="assets/Dr. M. PREETHIi.jpg" alt="Dr. M.Preethi" class="faculty-img" /></td>
-          </tr>
-          <tr>
-            <td>23UCS204</td>
-            <td>Data Science</td>
-            <td>Dr. M.Preethi</td>
-            <td><img src="assets/Dr. M. PREETHIi.jpg" alt="Dr. M.Preethi" class="faculty-img" /></td>
-          </tr>
-          <tr>
-            <td>23UCS205</td>
-            <td>Lab-RDBMS</td>
-            <td>Dr. J.Margaret Sangeetha</td>
-            <td><img src="assets/magie.jpg" alt="Dr. J.Margaret Sangeetha" class="faculty-img" /></td>
-          </tr>
+          <tr><td colspan="4">Loading courses...</td></tr>
         </tbody>
       </table>
     </section>
@@ -62,5 +33,36 @@
       2025 © <strong>ST. XAVIER'S COLLEGE (AUTONOMOUS)</strong>
     </div>
   </footer>
+
+  <!-- Axios CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tbody = document.querySelector('.courses-table tbody');
+
+    axios.get('http://localhost:4000/api/courses')
+      .then(response => {
+        const courses = response.data;
+        tbody.innerHTML = ''; // Clear loading message
+
+        courses.forEach(course => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${course.code}</td>
+            <td>${course.title}</td>
+            <td>${course.faculty}</td>
+            <td><img src="${course.image}" alt="${course.faculty}" class="faculty-img" width="100"/></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      })
+      .catch(error => {
+        console.error('Error loading courses:', error);
+        tbody.innerHTML = '<tr><td colspan="4">Failed to load courses data.</td></tr>';
+      });
+  });
+</script>
+
 </body>
 </html>
